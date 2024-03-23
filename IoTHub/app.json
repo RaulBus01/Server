@@ -3,6 +3,7 @@
     "name": "IoTHub",
     "slug": "IoTHub",
     "version": "1.0.0",
+    "scheme": "IoTHub-scheme",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
