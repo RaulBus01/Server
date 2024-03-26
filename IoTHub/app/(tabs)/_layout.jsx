@@ -20,7 +20,7 @@ const colorScheme = useColorScheme()
           }}
         />
 
-        {/* <Tabs.Screen 
+        <Tabs.Screen 
         name="(profile)" 
         options={{
         title:"Profile",
@@ -28,7 +28,7 @@ const colorScheme = useColorScheme()
         tabBarActiveBackgroundColor: "#70d4fb",
         tabBarInactiveBackgroundColor: "#bec4dd",
         tabBarIcon: ({color, size}) => <Ionicons name="person" size={size} color={color} />
-      }}/> */}
+      }}/>
     </Tabs>
     
   )
