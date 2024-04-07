@@ -111,47 +111,50 @@ const AccountSettings = () => {
 
     };
     return (
-      
+      <>
+    
       <View style={styles.container}>
-        <Toast config={toastConfig} />
-      <View style = {styles.inputView}>
-        
-        <Text style={styles.textProfile}>Email </Text>
-       <View style={styles.input}>
-         <TextInput 
-           title="Username" 
-           placeholder={email}
-           onChangeText={(text) => setNewEmail(text)}
-           editable={isEmailEditable}
-           style={styles.inputArea}
-           />
-           <Pressable >
-              {!isEmailEditable & !isUsernameEditable ? <Ionicons style={styles.logo} name="pencil" size={18} color="black" onPress={()=>setIsEmailEditable(!isEmailEditable)}/> : <Text></Text>}
-          </Pressable>
-       </View>
-         <Text style={styles.textProfile}>Username </Text>
-         <View style={styles.input}>
-          <TextInput 
-            title="Username" 
-            placeholder={username}
-            onChangeText={(text) => setNewUsername(text)}
-            editable={isUsernameEditable}
-            style={styles.inputArea}
-            />
-            <Pressable >
-              {!isUsernameEditable & !isEmailEditable ? <Ionicons  style={styles.logo}name="pencil" size={18} color="black" onPress={()=>setIsUsernameEditable(!isUsernameEditable)}/> : <Text></Text>}
-            </Pressable>
-          </View>
-          <View style={styles.bottomButton}>
-            <Pressable disabled={isUsernameEditable | isEmailEditable ? false:true}style={isUsernameEditable | isEmailEditable? styles.saveButtonActive:styles.saveButtonDisabled} onPress={handleSaveChanges}>
-            <Text style={styles.loginText}>Save</Text>
-            </Pressable>
-          </View>
-         
-       </View>
        
-       
-   </View>
+            <View style = {styles.inputView}>
+              
+              <Text style={styles.textProfile}>Email </Text>
+            <View style={styles.input}>
+              <TextInput 
+                title="Username" 
+                placeholder={email}
+                onChangeText={(text) => setNewEmail(text)}
+                editable={isEmailEditable}
+                style={styles.inputArea}
+                />
+                <Pressable >
+                    {!isEmailEditable & !isUsernameEditable ? <Ionicons style={styles.logo} name="pencil" size={18} color="black" onPress={()=>setIsEmailEditable(!isEmailEditable)}/> : <Text></Text>}
+                </Pressable>
+            </View>
+              <Text style={styles.textProfile}>Username </Text>
+              <View style={styles.input}>
+                <TextInput 
+                  title="Username" 
+                  placeholder={username}
+                  onChangeText={(text) => setNewUsername(text)}
+                  editable={isUsernameEditable}
+                  style={styles.inputArea}
+                  />
+                  <Pressable >
+                    {!isUsernameEditable & !isEmailEditable ? <Ionicons  style={styles.logo}name="pencil" size={18} color="black" onPress={()=>setIsUsernameEditable(!isUsernameEditable)}/> : <Text></Text>}
+                  </Pressable>
+                </View>
+                <View style={styles.bottomButton}>
+                  <Pressable disabled={isUsernameEditable | isEmailEditable ? false:true}style={isUsernameEditable | isEmailEditable? styles.saveButtonActive:styles.saveButtonDisabled} onPress={handleSaveChanges}>
+                  <Text style={styles.loginText}>Save</Text>
+                  </Pressable>
+                </View>
+              
+            </View>
+            
+            
+          </View>
+          <Toast config={toastConfig}/>
+      </>
  
     );
 

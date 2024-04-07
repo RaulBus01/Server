@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "IoTHub",
-    "slug": "IoTHub",
+    "slug": "iothub",
     "version": "1.0.0",
     "scheme": "IoTHub-scheme",
     "orientation": "portrait",
@@ -30,6 +30,15 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "0c13044b-43f0-499f-96b9-fd7fb8329c5f"
+      }
+    },
+    "owner": "laurbalaur"
   }
 }

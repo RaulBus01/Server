@@ -23,6 +23,17 @@ export const toastConfig = {
         color: 'white'
       }}
       />)
+  ,
+  info: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderColor: 'blue' ,backgroundColor: 'lightblue'}}
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 14,
+        color: 'white'
+      }}
+      />)
 };
 const LayoutProfile = () => {
   return (
