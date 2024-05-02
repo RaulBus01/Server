@@ -5,7 +5,7 @@ import { Stack } from 'expo-router'
 const LayoutHome = () => {
   return (
     <Stack>
-        <Stack.Screen name="index" options={{
+        <Stack.Screen name="home" options={{
           title:"Home",
           headerTintColor: "#fff",
           headerStyle: { backgroundColor: "#298ed6" },

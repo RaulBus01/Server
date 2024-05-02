@@ -2,8 +2,11 @@ import { View, Text,ScrollView, Pressable,StyleSheet } from 'react-native'
 import React from 'react'
 import { Ionicons as IonIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { auth } from '../../../config';
+import { signOut } from 'firebase/auth';
 
-const ProfileSettingsMenu = (props) => {
+
+const ProfileSettingsMenu = () => {
     function routeToAccountSettings() {
         router.push({ pathname:'/(tabs)/(profile)/(profileSettings)/accountSettings'})
     }
@@ -16,10 +19,29 @@ const ProfileSettingsMenu = (props) => {
     function routeToSecurity() {
         router.push({ pathname:'/(tabs)/(profile)/(profileSettings)/security'})
     }
+    const handleSignOut = async () => {
+        
+        await signOut(auth);
+        router.push({ pathname:'/(login)'})
+    }
+    
+
+
+       
   
     
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View>
+        <View style={styles.topContainer}>
+           
+            <Text style={[styles.textProfile, { textAlign: 'right' }]}>
+
+            Hello, {auth.currentUser.displayName}
+            </Text>
+            <IonIcons style={styles.icons} name="person-circle" size={34} color="black" />
+        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+       
         <View style={styles.topButtons}>
             <Pressable style={styles.buttons} onPress={routeToAccountSettings} >
                 <IonIcons style={styles.icons} name="person" size={24} color="black" />
@@ -45,12 +67,13 @@ const ProfileSettingsMenu = (props) => {
    
         </View>
         <View style={styles.bottomButton}>
-            <Pressable style={styles.signOutButton} onPress={()=>props.setIsUserLoggedIn(false)}>
+            <Pressable style={styles.signOutButton} onPress={handleSignOut}>
                 <IonIcons style={styles.icons} name="log-out" size={24} color="white" />
                 <Text style={styles.textProfile}>Sign Out</Text>
             </Pressable>
         </View>
     </ScrollView>
+    </View>
   )
 }
 const styles = StyleSheet.create({
@@ -77,7 +100,7 @@ const styles = StyleSheet.create({
     buttons:{
         borderRadius: 10,
         height: '10%',
-        width: '75%',
+        width: 360,
         paddingHorizontal: '15%',
         alignItems: 'center',
         flexDirection: 'row',
@@ -87,9 +110,8 @@ const styles = StyleSheet.create({
     },
     signOutButton: {
         borderRadius: 10,
-        width: '75%',
+        width: 360,
         padding: 10,
-        
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -97,7 +119,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     icons: {
-        marginRight: 10,
+        marginHorizontal: 10,
     },
     textProfile:
     {
@@ -105,6 +127,15 @@ const styles = StyleSheet.create({
         color :'#496989',
         marginVertical:5
     },
+    topContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        width: '100%',
+        padding: 10,
+    },
+   
+
 })
 
 export default ProfileSettingsMenu
