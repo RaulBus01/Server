@@ -2,7 +2,7 @@ import { View, Text,ScrollView, Pressable,StyleSheet } from 'react-native'
 import React from 'react'
 import { Ionicons as IonIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { auth } from '../../../config';
+import { auth } from '../../../configFirebase';
 import { signOut } from 'firebase/auth';
 
 
@@ -13,9 +13,10 @@ const ProfileSettingsMenu = () => {
     function routeToNotifications() {
         router.push({ pathname:'/(tabs)/(profile)/(profileSettings)/notifications'})
     }
-    function routeToPrivacy() {
-        router.push({ pathname:'/(tabs)/(profile)/(profileSettings)/privacy'})
+    function routeToFeedback() {
+        router.push({ pathname:'/(tabs)/(profile)/(profileSettings)/feedback'})
     }
+
     function routeToSecurity() {
         router.push({ pathname:'/(tabs)/(profile)/(profileSettings)/security'})
     }
@@ -53,10 +54,11 @@ const ProfileSettingsMenu = () => {
                 <Text style={styles.textProfile}>Notifications</Text>
             </Pressable>
        
-            <Pressable style={styles.buttons} onPress={routeToPrivacy}>
-                <IonIcons style={styles.icons} name="lock-closed" size={24} color="black" />
-                <Text style={styles.textProfile}>Privacy</Text>
+            <Pressable style={styles.buttons} onPress={routeToFeedback}>
+                <IonIcons style={styles.icons} name="chatbox-ellipses" size={24} color="black" />
+                <Text style={styles.textProfile}>Feedback</Text>
             </Pressable>
+
           
             <Pressable style={styles.buttons} onPress={routeToSecurity}>
                 <IonIcons style={styles.icons} name="shield-checkmark" size={24} color="black" />

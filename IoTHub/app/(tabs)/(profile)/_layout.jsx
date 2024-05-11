@@ -23,8 +23,8 @@ const LayoutProfile = () => {
           headerTintColor: "#fff",
           headerStyle: { backgroundColor: "#298ed6" },
           headerTitleAlign: "center",}  }/>
-        <Stack.Screen name="(profileSettings)/privacy" options={{
-          title:"Privacy",
+        <Stack.Screen name="(profileSettings)/feedback" options={{
+          title:"Feedback",
           headerTintColor: "#fff",
           headerStyle: { backgroundColor: "#298ed6" },
           headerTitleAlign: "center",}  }/>

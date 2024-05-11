@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
-export const stylesLogin = StyleSheet.create({
+export const stylesProfile = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '',
         alignItems: 'center',
   
     },
+
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -27,6 +28,15 @@ export const stylesLogin = StyleSheet.create({
         width: 400,
       
     },
+    contentFeedback:{
+        marginTop:30,
+        borderRadius: 10,
+        height: 620,
+        alignItems: 'center',
+        backgroundColor: '#63c5e2',
+        width: 400,
+    },
+    
     buttonLeft: {
         backgroundColor: '#67C6E3',
         padding: 10,
@@ -157,5 +167,37 @@ export const stylesLogin = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         width: 300,
+    },
+    actionButtonDisabled: {
+        backgroundColor: '#63E2C0',
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 20,
+        width: 300,
+        opacity: 0.5,
+    },
+    textAreaInput: {
+        backgroundColor: '#fff',
+        
+        textAlign: 'left',
+        textAlignVertical:'bottom',
+        padding: 10,
+        borderRadius: 10,
+        marginVertical: 10,
+        width: 300,
+        height: 240,
+    },
+    sliderStyle:{
+        width: 300,
+        marginVertical: 10,
+    
+    },
+    iconsSlider:
+    {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: 200,
+        marginBottom: 10,
     },
   });

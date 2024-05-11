@@ -1,8 +1,8 @@
 import { View, Text, Pressable,TextInput,StyleSheet,TouchableOpacity} from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react'
-import {styles} from './loginStyles.jsx'
-import { auth } from '../../config';
+import {stylesLogin} from './loginStyles.jsx'
+import { auth } from '../../configFirebase.js';
 import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth'
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../toastConfig'
@@ -78,8 +78,6 @@ const registerComponent = () => {
       
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           const user = userCredential.user;
-          console.log(user);
-          console.log(username);
           await updateProfile(user, {
             displayName: username,
           
@@ -105,50 +103,50 @@ const registerComponent = () => {
 
   return (
     <>
-        <View style={styles.content}>
+        <View style={stylesLogin.content}>
         
-            <Text style={styles.textProfile}>Create a new account</Text>
+            <Text style={stylesLogin.textProfile}>Create a new account</Text>
        
            
             <TextInput
-                style={styles.inputContainer}
+                style={stylesLogin.inputContainer}
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
             />
             <TextInput
-                style={styles.inputContainer}
+                style={stylesLogin.inputContainer}
                 placeholder="Email"
                 value={email}
                 onChangeText={setEmail}
             />
-            <View style={styles.passwordContainer}>
+            <View style={stylesLogin.passwordContainer}>
               <TextInput
                   title="Password"
                   placeholder='Password'
                   secureTextEntry={!isPasswordVisible}
-                  style={styles.inputContainer}
+                  style={stylesLogin.inputContainer}
                   onChangeText={(text) => setPassword(text)}
               />
               <Ionicons
                 name={!isPasswordVisible ? "eye" : "eye-off"}
                 size={20}
-                style={styles.eyeIcon}
+                style={stylesLogin.eyeIcon}
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
             />
             </View>
-            <View style={styles.passwordContainer}>
+            <View style={stylesLogin.passwordContainer}>
               <TextInput
                    title="Confirm Password"
                    placeholder='Confirm Password'
                    secureTextEntry={!isConfirmPasswordVisible}
-                   style={styles.inputContainer}
+                   style={stylesLogin.inputContainer}
                    onChangeText={(text) => setConfirmPassword(text)}
               />
               <Ionicons
                 name={!isConfirmPasswordVisible ? "eye" : "eye-off"}
                 size={20}
-                style={styles.eyeIcon}
+                style={stylesLogin.eyeIcon}
                 onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}    
               />
             </View>
@@ -156,9 +154,9 @@ const registerComponent = () => {
 
 
         </View>
-         <TouchableOpacity style={styles.bottomButton}>
-         <Pressable  style={styles.actionButton} onPress={register}>
-             <Text style={styles.loginText}>Register</Text>
+         <TouchableOpacity style={stylesLogin.bottomButton}>
+         <Pressable  style={stylesLogin.actionButton} onPress={register}>
+             <Text style={stylesLogin.loginText}>Register</Text>
          </Pressable>
         </TouchableOpacity>
         <Toast config={toastConfig}/>

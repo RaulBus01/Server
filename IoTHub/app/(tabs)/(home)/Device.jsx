@@ -7,7 +7,7 @@ const Device = (props) => {
   
   
   function routeToDetails() {
-    console.log(props.name)
+   
     router.push({ pathname:'/(tabs)/(home)/[deviceId]', params:{name: props.name, type: props.type}})
   }
   return (

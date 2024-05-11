@@ -22,8 +22,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
-   
+      },
+      
+      "googleServicesFile": "./android/app/google-services.json",
+      "package": "com.iotca.android"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -31,7 +33,6 @@
     },
     "plugins": [
       "expo-router"
-
     ],
     "extra": {
       "router": {

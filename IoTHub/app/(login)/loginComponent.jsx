@@ -1,10 +1,10 @@
 import { View, Text, Pressable,TextInput,StyleSheet,TouchableOpacity, Platform} from 'react-native'
 import React from 'react'
 import { signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,sendPasswordResetEmail } from 'firebase/auth'
-import {styles} from './loginStyles.jsx'
+import {stylesLogin} from './loginStyles.jsx'
 
 import { Ionicons } from '@expo/vector-icons';
-import { auth,app } from '../../config.js';
+import { auth,app } from '../../configFirebase.js';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../toastConfig'
 const loginComponent = () => {
@@ -17,15 +17,34 @@ const loginComponent = () => {
   
   const handleLogin = () => {
    
+    if (email === '' || password === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please fill in all fields ',
+        autoHide: true,
+      });
+      return;
+    }
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
        
         const user = userCredential.user;
+        Toast.show({
+          type: 'success',
+          text1: 'Login Successful',
+          autoHide: true,
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid email or password',
+          autoHide: true,
+        });
       });
 
   }
@@ -39,13 +58,38 @@ const loginComponent = () => {
           const credential = GoogleAuthProvider.credentialFromResult(result);
           const token = credential.accessToken;
           const user = result.user;
-          console.log(token, user);
+
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          const user = result.user;
+
+         
+
         }).catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           const email = error.email;
           const credential = GoogleAuthProvider.credentialFromError(error);
-          console.log(errorCode, errorMessage, email, credential);
+          
+          Toast.show({
+            type: 'error',
+            text1: 'An error occurred while trying to sign in with Google',
+            autoHide: true,
+          });
+        });
+        }).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          const email = error.email;
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          
+          Toast.show({
+            type: 'error',
+            text1: 'An error occurred while trying to sign in with Google',
+            autoHide: true,
+          });
         });
       }
 
@@ -61,6 +105,7 @@ const loginComponent = () => {
     }
     sendPasswordResetEmail(auth, email)
       .then(() => {
+        
         Toast.show({
           type: 'success',
           text1: 'Password reset email sent',
@@ -70,17 +115,14 @@ const loginComponent = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        Toast.show({
+          type: 'error',
+          text1: 'An error occurred while trying to send the password reset email',
+          autoHide: true,
+        });
       });
   }
-  const handlePasswordChange = (text) => {
-    if (text.length > 0) {
-      text = text.slice(0, -1) + '*';
-    }
-    setPassword(text);
-  };
-
-   
+ 
 
 
 
@@ -91,62 +133,58 @@ const loginComponent = () => {
         
   return (
     <>
-    
-    <View style={styles.content}>
-          <Text style={styles.textProfile}> You need to login to access your profile</Text> 
-          { Platform.OS === 'web' ?
+      <View style={stylesLogin.content}>
+        <Text style={stylesLogin.textProfile}> You need to login to access your profile</Text>
+        {Platform.OS === 'web' ? (
           <>
-          <Pressable  style ={styles.googleButton} onPress={handleGoogleLogin}>
-            <Ionicons name="logo-google" size={20} style={styles.logoGoogle}>
-            </Ionicons>
-            <Text style={styles.loginText}>Log In with Google</Text>
-            
-          </Pressable>
-          
-          <Text style={styles.textProfile}> Or </Text>
-          </>
-          :
-          null}  
-          <TextInput title="Email" placeholder='Email' onChangeText={(text) => setEmail(text)}value={email} style={styles.inputContainer}/>
-          
-          
-       
-            
-          <View style={styles.passwordContainer}>
-            <TextInput
-              title="Password"
-              placeholder='Password'
-              secureTextEntry={!isPasswordVisible}
-              style={styles.inputContainer}
-              onChangeText={handlePasswordChange}
-            />
-            <Ionicons
-                name={!isPasswordVisible ? "eye" : "eye-off"}
-                size={20}
-                style={styles.eyeIcon}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-            />
-          </View>
-            
-            
-          
-          <View style={styles.linkContainer}>
-              <Pressable style={styles.forgotPasswordLink} onPress={handleForgotPassword}>
-                  <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </Pressable>
-          </View>
-          
-          
-    </View>
-    <View style={styles.bottomButton}>
-            <Pressable onPress={handleLogin} style={styles.actionButton}>
-                  <Text style={styles.loginText}>Login</Text>
+            <Pressable style={stylesLogin.googleButton} onPress={handleGoogleLogin}>
+              <Ionicons name="logo-google" size={20} style={stylesLogin.logoGoogle} />
+              <Text style={stylesLogin.loginText}>Log In with Google</Text>
             </Pressable>
+
+            <Text style={stylesLogin.textProfile}> Or </Text>
+          </>
+        ) : null}
+        <TextInput
+          title="Email"
+          placeholder="Email"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          style={stylesLogin.inputContainer}
+        />
+
+        <View style={stylesLogin.passwordContainer}>
+          <TextInput
+            title="Password"
+            placeholder="Password"
+            secureTextEntry={!isPasswordVisible}
+            style={stylesLogin.inputContainer}
+            onChangeText={(text) => setPassword(text)}
+          />
+          <Ionicons
+            name={!isPasswordVisible ? "eye" : "eye-off"}
+            size={20}
+            style={stylesLogin.eyeIcon}
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          />
+        </View>
+
+        <View style={stylesLogin.linkContainer}>
+          <Pressable style={stylesLogin.forgotPasswordLink} onPress={handleForgotPassword}>
+            <Text style={stylesLogin.forgotPasswordText}>Forgot Password?</Text>
+          </Pressable>
+        </View>
+      
+      
+      <View style={stylesLogin.bottomButton}>
+        <Pressable onPress={handleLogin} style={stylesLogin.actionButton}>
+          <Text style={stylesLogin.loginText}>Login</Text>
+        </Pressable>
+      </View>
+      <Toast config={toastConfig} />
     </View>
-    <Toast config={toastConfig}/>
     </>
-    
-    );
+  );
 }
 
 export default loginComponent

@@ -4,7 +4,7 @@ import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons';
 import LoginScreen from '../(login)/login';
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from '../../config';
+import { auth } from '../../configFirebase';
 import LoadingScreen from '../loadingScreen';
 
 
@@ -26,7 +26,7 @@ const TabsLayout = () => {
   }, []);
 
   if (loading) {
-    return <LoadingScreen />; // Replace with your loading screen component
+    return <LoadingScreen />; 
   }
   const colorScheme = 'dark';
 
