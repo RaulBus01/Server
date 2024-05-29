@@ -23,17 +23,25 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      
       "googleServicesFile": "./android/app/google-services.json",
-      "package": "com.iotca.android"
+      "package": "com.laurbalaur.iothub"
+      
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+       "bundler" :"metro"
+       
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-av",
+      "@react-native-firebase/app"
+   
+      
+     
+    
     ],
+
     "extra": {
       "router": {
         "origin": false
