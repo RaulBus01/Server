@@ -143,7 +143,7 @@ const TranscribeScreen = () => {
                     lang: 'en-US',
                     date: new Date().toISOString().split('T')[0],
                     sound: recordingFile.sound,
-                    transcription: results
+                    transcription: results.channels[0].alternatives[0].transcript
                 }
             ]);
     
@@ -300,11 +300,21 @@ const TranscribeScreen = () => {
         setTranscriptions(newTranscriptions);
     }
     const navigateTo = (screen: string,text:any) => {
+        
         router.push({ pathname: screen, params:{
-            text:text
+            textString:text
 
         }});
       }
+      const refresh = async() =>
+        {   
+           
+            if (recording) {
+                await recording.stopAndUnloadAsync();
+                setRecording(undefined);
+            }
+            await listFiles();
+        }
    
     React.useEffect(() => {
         listFiles();
@@ -334,7 +344,7 @@ const TranscribeScreen = () => {
             <Button mode="contained" onPress={deleteAllTranscriptionsDB}>
                 Clear Transcriptions
             </Button>
-            <Button mode="contained" onPress={listFiles}>
+            <Button mode="contained" onPress={refresh}>
                 Refresh
             </Button>
             </View>

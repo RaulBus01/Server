@@ -338,7 +338,7 @@ const TranscribeScreen = () => {
      const navigateTo = (screen: string,text:any) => {
         
         router.push({ pathname: screen, params:{
-            text:text
+            textString:text
 
         }});
       }

@@ -4,7 +4,6 @@ import { Appbar, Card, Text, IconButton, Button, Switch, List } from 'react-nati
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
 import { auth } from '../../../configFirebase';
-import StateProvider from '../../../providers/StateProvider';
 import io from 'socket.io-client';
 
 const socket = io('http://192.168.1.215:8083');
@@ -31,7 +30,7 @@ const ControlScreen = () => {
   const [iotResponse, setIotResponse] = React.useState('');
   React.useEffect(() => {
     socket.on('sensorReadings', (data) => {
-      console.log(data);
+     
       setSensorReadings(
         {
           gas: data.gas,
