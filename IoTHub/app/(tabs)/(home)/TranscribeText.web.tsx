@@ -125,6 +125,10 @@ const TranscribeScreen = () => {
                 });
 
                 results = await transcribeAudio(recording.assets[0].uri,"WEB");
+                FileSaverAudio(recording.assets[0].uri).then(async (file) => {
+                
+                    await uploadFile(file, 'audio.mp3');}
+                );
             }
             else if(type === "record")
             {
@@ -134,11 +138,14 @@ const TranscribeScreen = () => {
                     text2: 'The audio is being transcribed',
                 });
                 results = await transcribeAudio(recording,"WEB");
-                console.log(results);
+                FileSaverAudio(recording).then(async (file) => {
+                
+                    await uploadFile(file, 'audio.mp3');}
+                );
+              
             }
-            FileSaverAudio(recordingFile.file).then(async (file) => {
-                await uploadFile(file, 'audio.mp3');}
-            );
+           
+            
             FileSaverText(results).then(async (file) => {
                 await uploadFile(file, 'transcription.txt');});
                 
@@ -217,7 +224,7 @@ const TranscribeScreen = () => {
                 const duration = await sound.getStatusAsync();
             
                 const newRecording = {
-                    sound,
+                    sound: sound,
                     duration: getDurationFormatted(duration),
                     file: result.assets[0].uri,
                 };
@@ -232,7 +239,9 @@ const TranscribeScreen = () => {
     async function uploadFile(blob: Blob, fileName: string) {
         const storage = getStorage();
         const storageRef = ref(storage, `transcriptions/${transcriptions.length + 1}/${fileName}`);
+        
     
+
         await uploadBytes(storageRef, blob);
       
     }
@@ -327,7 +336,7 @@ const TranscribeScreen = () => {
           }
     }
      const navigateTo = (screen: string,text:any) => {
-        console.log(text);
+        
         router.push({ pathname: screen, params:{
             text:text
 

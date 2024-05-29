@@ -32,17 +32,7 @@ const TranscribeScreen = () => {
         duration: string,
         file: string | null,
     };
-    const FileType = {
-        MP3: 'audio/mp3',
-        WAV: 'audio/wav',
-        FLAC: 'audio/flac',
-        M4A: 'audio/m4a',
-        MP4: 'video/mp4',
-        MOV: 'video/quicktime',
-        AVI: 'video/x-msvideo',
-        WMV: 'video/x-ms-wmv',
-        FLV: 'video/x-flv',
-      };
+   
 
     const [recording, setRecording] = React.useState<Audio.Recording | undefined>();
     const [recordings, setRecordings] = React.useState<RecordingType[]>([]);
@@ -132,12 +122,12 @@ const TranscribeScreen = () => {
                     text1: '🗨️ Transcribing audio',
                     text2: 'The audio is being transcribed',
                 });
-                console.log("Recording",recording);
+                
                 results = await transcribeAudio(recording,"Android");
                 
                
             }
-           FileSaverAudio(recordingFile.file).then(async (file) => {
+           FileSaverAudio(recording).then(async (file) => {
             await uploadAudio(file, 'audio.mp3');});
 
            

@@ -2,7 +2,7 @@
 const FileSaverText = async(data:any) => {
     try {
         const transcript = data.channels[0].alternatives[0].transcript;
-        console.log(transcript);
+        
         
         if (transcript === '') {
             throw new Error('No transcript found');

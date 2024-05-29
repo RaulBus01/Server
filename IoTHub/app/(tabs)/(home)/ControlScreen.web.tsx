@@ -5,13 +5,56 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
 import { auth } from '../../../configFirebase';
 import StateProvider from '../../../providers/StateProvider';
-const HomeControl = () => {
+import io from 'socket.io-client';
+
+const socket = io('http://192.168.1.215:8083');
+
+
+
+const ControlScreen = () => {
   const [user, setUser] = React.useState('');
   const [switchStates, setSwitchStates] = React.useState({
     lights: false,
     windows: false,
     fan: false,
   });
+  const [sensorReadings, setSensorReadings] = React.useState(
+    {
+        gas: 0,
+        co2: 0,
+        tvoc: 0,
+        temperature: 0,
+        humidity: 0,
+        timestamp: 0,
+    }
+  );
+  const [iotResponse, setIotResponse] = React.useState('');
+  React.useEffect(() => {
+    socket.on('sensorReadings', (data) => {
+      console.log(data);
+      setSensorReadings(
+        {
+          gas: data.gas,
+          co2: data.co2,
+          tvoc: data.tvoc,
+          temperature: data.temperature,
+          humidity: data.humidity,
+          timestamp: data.timestamp,
+        }
+      )
+    });
+    socket.on('iotResponse', (data) => {
+      setIotResponse(data);
+    });
+    return () => {
+      socket.off('sensorReadings');
+      socket.off('iotResponse');
+    };
+  }, []);
+  console.log(sensorReadings);
+  console.log(iotResponse);
+
+
   
   React.useEffect(() => {
     fetch('http://localhost:3002/invokeMethod', {
@@ -41,14 +84,24 @@ const HomeControl = () => {
   }, []);
 
   React.useEffect(() => {
+
+    setTimeout(() => {
+
     const user = auth.currentUser;
+    
 
     if (user) {
       setUser(user.displayName);
-      
-    } else {
-      router.push({ pathname: 'Login' });
     }
+    else
+      {
+        navigateTo('LoginScreen');
+      }
+    }, 1000);
+
+    
+      
+  
   }, []);
 
   const navigateTo = (screen: string) => {
@@ -63,7 +116,7 @@ const HomeControl = () => {
         [endpoint]: value,
       }));
   
-      fetch('http://localhost:3002/invokeMethod', {
+      fetch('http://192.168.1.215:8080/invokeMethod', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -94,7 +147,7 @@ const HomeControl = () => {
             <Text style={styles.roomTemperature}>Room Temperature</Text>
               <View style={styles.temperatureDial}>
                 
-                <Text style={styles.temperatureValue}>25°C</Text>
+                <Text style={styles.temperatureValue}>{sensorReadings.temperature}°C</Text>
                
               </View>
             </View>
@@ -102,7 +155,7 @@ const HomeControl = () => {
               <Text style={styles.roomTemperature}>Room Humidity</Text>
               <View style={styles.temperatureDial}>
                   
-                  <Text style={styles.temperatureValue}>92%</Text>
+                  <Text style={styles.temperatureValue}>{sensorReadings.humidity}%</Text>
               </View>
               
             </View>
@@ -332,4 +385,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeControl;
+export default ControlScreen;

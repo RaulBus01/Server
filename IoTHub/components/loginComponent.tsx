@@ -86,7 +86,9 @@ const LoginComponent = (props:any) => {
   };
 
   return (
-    <>
+    <View>
+
+    
       <View style={stylesLogin.content}>
         <Text style={stylesLogin.textProfile}>You need to login to access your profile</Text>
         {Platform.OS === 'web' && (
@@ -132,7 +134,7 @@ const LoginComponent = (props:any) => {
         </View>
         <Toast config={toastConfig} />
       </View>
-    </>
+    </View>
   );
 };
 

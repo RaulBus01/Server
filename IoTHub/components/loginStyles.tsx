@@ -4,6 +4,7 @@ export const stylesLogin = StyleSheet.create({
         flex: 1,
         backgroundColor: '',
         alignItems: 'center',
+        justifyContent: 'center',
   
     },
     buttonContainer: {
@@ -24,7 +25,7 @@ export const stylesLogin = StyleSheet.create({
         height: 420,
         alignItems: 'center',
         backgroundColor: '#63c5e2',
-        width: 400,
+        width: 350,
       
     },
     buttonLeft: {

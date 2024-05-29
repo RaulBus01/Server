@@ -9,8 +9,14 @@ const transcribeAudio = async (recording:any,platform:any) => {
       fileUri = recording
       
     
-      formData.append('audio',  fileUri);
-      response = await fetch('http://192.168.1.215:8081/transcribe', {
+      formData.append('audio',
+        {
+          uri: fileUri,
+          type: 'audio/mp3',
+          name: 'audio.mp3'
+        });
+        
+      response = await fetch('http://192.168.1.215:8080/transcribe', {
         method: 'POST',
         body: formData,
       });
@@ -20,7 +26,7 @@ const transcribeAudio = async (recording:any,platform:any) => {
       const file = await fetch(fileUri);
       const blob = await file.blob();
       formData.append('audio', blob);
-      response = await fetch('http://localhost:3002/transcribe', {
+      response = await fetch('http://192.168.1.215:8080/transcribe', {
         method: 'POST',
         body: formData,
     });
@@ -31,11 +37,11 @@ const transcribeAudio = async (recording:any,platform:any) => {
     
     
     const data = await response.json();
-    console.log(data);
+   
     if (!response.ok) {
         throw new Error(data.error);
     }
-    console.log(data);
+    
     return data.results;
   }
   catch (error) {
