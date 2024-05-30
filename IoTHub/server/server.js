@@ -3,7 +3,7 @@ const axios = require('axios');
 const cors = require('cors');
 const { createClient } = require('@deepgram/sdk');
 
-const {HOST,PORT,IO_PORT } = require('./serverconfig');
+const {HOST,PORT,IO_PORT,shaKey,apiKey,QUEUE_CoNNECTION_STRING } = require('./serverconfig');
 
 const multer = require('multer');
 const fs = require('fs');
@@ -17,7 +17,7 @@ const http = require('http');
 
 const { ServiceBusClient } = require('@azure/service-bus');
 const { time } = require('console');
-const connectionString = 'Endpoint=sb://servicebusiotca.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=0i0YylBhdb6N1HvgB26myNrtKruwOh+Fc+ASbIOStVU='
+const connectionString = QUEUE_CoNNECTION_STRING;
 const queueName = 'sensor-readings';
 const sbClient = new ServiceBusClient(connectionString);
 const receiver = sbClient.createReceiver(queueName);
@@ -33,7 +33,7 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
     }
 
     const filePath = path.join(__dirname, req.file.path);
-    const deepgramApiKey = 'c8b62d69fd5410f08c8c5fbd5fc54f7d0f98f663';  // Replace with your actual API key
+    const deepgramApiKey = apiKey  // Replace with your actual API key
     const deepgram = createClient(deepgramApiKey);
 
     try {
@@ -71,7 +71,7 @@ app.post('/invokeMethod', async (req, res) => {
       url: `https://iothubbuscrisan.azure-devices.net/twins/${targetDevice}/methods?api-version=2021-04-12`,
       headers: { 
         'Content-Type': 'application/json', 
-        'Authorization': 'SharedAccessSignature sr=IOTHubBusCrisan.azure-devices.net&sig=yI4g98vU2NMY1Xpa8ap2Fl6L9O0ZFy4WjtFc8jce%2BI4%3D&se=1717600096&skn=iothubowner'
+        'Authorization': shaKey
       },
       data : data
     };
@@ -86,27 +86,7 @@ app.post('/invokeMethod', async (req, res) => {
       res.status(500).json({ error: 'Error invoking IoT Hub method' });
     }
   });
-app.post('/receiveAudio', async (req, res) => {
-    const { audio } = req.body;
-    const deepgramApiKey = 'c8b62d69fd5410f08c8c5fbd5fc54f7d0f98f663';  // Replace with your actual API key
-    const deepgram = createClient(deepgramApiKey);
-    try{
-        const { result, error } = await deepgram.listen.prerecorded.transcribeBuffer(
-            Buffer.from(audio, 'base64'),
-            { punctuate: true, model: 'nova-2', language: 'en-US' }
-        );
-        if (error) {
-            console.error('Deepgram error:', error);
-            return res.status(500).json({ error });
-        }
-        return res.json(result);
-    }
-    catch(error){
-        console.error('Error processing transcription:', error);
-        return res.status(500).json({ error: error.message });
-    }
-}
-);
+
 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
