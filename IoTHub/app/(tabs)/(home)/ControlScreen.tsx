@@ -5,12 +5,13 @@ import { Appbar, Card, Text, IconButton, Button, Switch, List } from 'react-nati
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { auth } from '../../../configFirebase';
 import io from 'socket.io-client';
+import {HOST, IO_PORT, PORT} from '../../../serverconfig'
 
-const socket = io('http://192.168.1.215:8083');
+const socket = io(`http://${HOST}:${IO_PORT}`);
+
+
+
 const ControlScreen = () => {
-
- 
-
   const [user, setUser] = React.useState('');
   const [switchStates, setSwitchStates] = React.useState({
     lights: false,
@@ -30,7 +31,7 @@ const ControlScreen = () => {
   const [iotResponse, setIotResponse] = React.useState('');
   React.useEffect(() => {
     socket.on('sensorReadings', (data) => {
-      console.log(data);
+     
       setSensorReadings(
         {
           gas: data.gas,
@@ -53,8 +54,10 @@ const ControlScreen = () => {
   console.log(sensorReadings);
   console.log(iotResponse);
 
+
+  
   React.useEffect(() => {
-    fetch('http://192.168.1.215:8081/invokeMethod', {
+    fetch(`http://${HOST}:${PORT}/invokeMethod`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -65,59 +68,92 @@ const ControlScreen = () => {
         payload: 'a'
       })
     })
-
-    .then(response => {
-      console.log(response);
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+      
       setSwitchStates({
         lights: data.payload.data[0] === 1,
         windows: data.payload.data[1] === 1,
         fan: data.payload.data[2] === 1,
       });
-
-
-    
      
     })
     .catch((error) => {
       console.error('Error:', error);
     });
   }, []);
-  console.log(switchStates);
+
   React.useEffect(() => {
+
     setTimeout(() => {
 
-      const user = auth.currentUser;
+    const user = auth.currentUser;
+    
+
+    if (user) {
+      setUser(user.displayName);
+    }
+    else
+      {
+        setUser('Guest');
+      }
+    }, 1000);
+
+    
       
   
-      if (user) {
-        setUser(user.displayName);
-      }
-      else
-        {
-          navigateTo('LoginScreen');
-        }
-      }, 1000);
   }, []);
-  
 
-  
   const navigateTo = (screen: string) => {
     router.push({ pathname: screen });
   }
- 
+  
   const handleSwitchChange = async (endpoint:string, value:boolean) =>
     {
-      
+      console.log(endpoint, value);
       setSwitchStates((prevState) => ({
         ...prevState,
         [endpoint]: value,
       }));
-     
+  
+      fetch(`http://${HOST}:${PORT}/invokeMethod`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          targetDevice: 'rasbperry',
+          methodName: endpoint,
+          payload: {
+            value
+          }
+        })
+      }).then
+      (response => response.json())
+      .then(data => {
+        
+      })
+      .catch((error) => {
+        
+      });
+
     }
+    React.useEffect(() => {
+   
+      socket.on('deviceState', (data) => {
+        
+        setSwitchStates({
+          lights: data.payload.data[0] === 1,
+          windows: data.payload.data[1] === 1,
+          fan: data.payload.data[2] === 1,
+        });
+       
+      })
+      return () => {
+        socket.off('deviceState');
+      }
+     
+    }, []);
   
   return (
     <View style={styles.container}>
@@ -156,6 +192,7 @@ const ControlScreen = () => {
               { icon: 'monitor-dashboard', label: 'Dashboard',screen: 'Dashboard' },
               { icon: 'text-to-speech', label: 'Speech-to-Text',screen:'TranscribeText' },
               { icon: 'home-import-outline', label: 'Back home',screen:'HomeScreen' },
+              { icon: 'logout', label: 'Logout',screen:'deviceid'}
             ].map((item, index) => (
               
               <Button  key={index} mode="contained" style={styles.quickActionButton} icon={item.icon}

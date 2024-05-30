@@ -5,8 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
 import { auth } from '../../../configFirebase';
 import io from 'socket.io-client';
+import { HOST,IO_PORT,PORT } from '../../../serverconfig';
 
-const socket = io('http://192.168.1.215:8083');
+const socket = io(`http://${HOST}:${IO_PORT}`);
 
 
 
@@ -47,7 +48,7 @@ const ControlScreen = () => {
     });
     return () => {
       socket.off('sensorReadings');
-      socket.off('iotResponse');
+     
     };
   }, []);
   console.log(sensorReadings);
@@ -56,7 +57,7 @@ const ControlScreen = () => {
 
   
   React.useEffect(() => {
-    fetch('http://localhost:3002/invokeMethod', {
+    fetch(`http://${HOST}:${PORT}/invokeMethod`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -94,7 +95,7 @@ const ControlScreen = () => {
     }
     else
       {
-        navigateTo('LoginScreen');
+        setUser('Guest');
       }
     }, 1000);
 
@@ -115,7 +116,7 @@ const ControlScreen = () => {
         [endpoint]: value,
       }));
   
-      fetch('http://192.168.1.215:8080/invokeMethod', {
+      fetch(`http://${HOST}:${PORT}/invokeMethod`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -128,8 +129,31 @@ const ControlScreen = () => {
           }
         })
       }).then
+      (response => response.json())
+      .then(data => {
+        
+      })
+      .catch((error) => {
+        
+      });
 
     }
+    React.useEffect(() => {
+   
+      socket.on('deviceState', (data) => {
+        console.log(data);
+        setSwitchStates({
+          lights: data.payload.data[0] === 1,
+          windows: data.payload.data[1] === 1,
+          fan: data.payload.data[2] === 1,
+        });
+       
+      })
+      return () => {
+        socket.off('deviceState');
+      }
+     
+    }, []);
 
   return (
     <View style={styles.container}>

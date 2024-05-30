@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 const TabsLayout = () => {
-
+ 
   
 
   const colorScheme = 'dark';
@@ -11,9 +11,11 @@ const TabsLayout = () => {
   return (
 
     <Tabs sceneContainerStyle={colorScheme === 'dark' ? styles.darkStyle : styles.lightStyle} >
-      <Tabs.Screen 
-        name="(home)" 
+     <Tabs.Screen 
+        name="(home)"
+        
         options={{
+
           title: "Home",
           headerShown: false,
           headerTitleAlign: "center",
@@ -24,6 +26,7 @@ const TabsLayout = () => {
       />
       <Tabs.Screen 
         name="(profile)" 
+      
         options={{
           title: "Profile",
           headerShown: false,
@@ -32,6 +35,7 @@ const TabsLayout = () => {
           tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />
         }}
       />
+       
     </Tabs>
   );
 };

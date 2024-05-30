@@ -1,18 +1,27 @@
-import React, { useState, createContext } from 'react';
-import { User } from 'firebase/auth';
+import React from 'react';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from '../configFirebase';
 
-export type AuthenticatedUserContextType = {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-};
-export const AuthenticatedUserContext =  React.createContext<AuthenticatedUserContextType | undefined>(undefined);
 
-export const AuthenticatedUserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+export function useAuthentication() {
+  const [user, setUser] = React.useState<User>();
 
-  return (
-    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthenticatedUserContext.Provider>
-  );
-};
+  React.useEffect(() => {
+    const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        setUser(user);
+      } else {
+        // User is signed out
+        setUser(undefined);
+      }
+    });
+
+    return unsubscribeFromAuthStatuChanged;
+  }, []);
+
+  return {
+    user
+  };
+}

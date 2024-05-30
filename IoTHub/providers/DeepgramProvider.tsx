@@ -1,4 +1,4 @@
-
+import { HOST,PORT } from "../serverconfig";
 const transcribeAudio = async (recording:any,platform:any) => {
   try {
     let fileUri = '';
@@ -16,7 +16,7 @@ const transcribeAudio = async (recording:any,platform:any) => {
           name: 'audio.mp3'
         });
         
-      response = await fetch('http://192.168.1.215:8080/transcribe', {
+      response = await fetch(`http://${HOST}:${PORT}/transcribe`, {
         method: 'POST',
         body: formData,
       });
@@ -26,7 +26,7 @@ const transcribeAudio = async (recording:any,platform:any) => {
       const file = await fetch(fileUri);
       const blob = await file.blob();
       formData.append('audio', blob);
-      response = await fetch('http://192.168.1.215:8080/transcribe', {
+      response = await fetch(`http://${HOST}:${PORT}/transcribe`, {
         method: 'POST',
         body: formData,
     });

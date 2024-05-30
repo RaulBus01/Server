@@ -3,14 +3,54 @@ import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Appbar, Card, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import io, { connect } from 'socket.io-client';
+import { HOST, IO_PORT } from '../../../serverconfig';
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = React.useState('Now');
+  const [sensorReadings, setSensorReadings] = React.useState({
+    gas: '',
+    co2: 0,
+    tvoc: 0,
+    temperature: 0,
+    humidity: 0,
+    timestamp: 0,
+    airquality: '',
+    connection: false,
+  });
+  const [iotResponse, setIotResponse] = React.useState('');
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
 
   };
+  React.useEffect(() => {
+   
+      const socket = io(`http://${HOST}:${IO_PORT}`);
+      socket.on('sensorReadings', (data) => {
+       
+        setSensorReadings(
+          {
+            gas: data.gas > 500 ? 'High' : 'Low',
+            co2: data.co2,
+            tvoc: data.tvoc,
+            temperature: data.temperature,
+            humidity: data.humidity,
+            timestamp: data.timestamp,
+            airquality: data.gas > 500 ? 'Low' : 'High',
+            connection: true,
+          }
+        )
+      });
+      socket.on('iotResponse', (data) => {
+        setIotResponse(data);
+      });
+      return () => {
+        socket.off('sensorReadings');
+        socket.off('iotResponse');
+      };
+    }, []);
   
   return (
     <View style={styles.container}>
@@ -26,27 +66,37 @@ const Dashboard = () => {
               </Text>
             ))}
           </View>
-        <View style={styles.grid}>
-          {[
-            { label: 'Temp', value: '23°', icon: 'chart-line' },
-            { label: 'Humidity', value: '92%', icon: 'water' },
-            { label: 'L. Temp', value: '14°', icon: 'chart-line' },
-            { label: 'Air Quality', value: 'Good', icon: 'air-filter'},
-            { label: 'Gas Concentration', value: 'Low', icon: 'gas-cylinder'}
+          <View style={styles.grid}>
+          {
+          [
+            { label: 'Temp', value: `${sensorReadings.temperature}°C`, icon: 'chart-line' },
+            { label: 'Humidity', value: `${sensorReadings.humidity}%`, icon: 'water' },
+            activeTab === 'Now' ? {}:{ label: 'L. Temp', value: '14°', icon: 'chart-line' },
+            { label: 'Air Quality', value: `${sensorReadings.gas}`, icon: 'air-filter'},
+            { label: 'Gas Concentration', value: `${sensorReadings.airquality}`, icon: 'gas-cylinder'}
           ].map((item, index) => (
+            item.label ? 
             <Card key={index} style={styles.card}>
-              <Card.Content>
+                <Card.Content>
+                  
+        
                 <Text style={styles.label}>{item.label}</Text>
                 <Text style={styles.value}>{item.value}</Text>
                 <Icon name={item.icon} size={24} color={"gray"} />
                 { (
                   <View style={styles.offlineContainer}>
-                    <Icon name="wifi-off" size={16} color="gray" />
-                    <Text style={styles.offlineText}>Offline</Text>
+                    <Icon name={sensorReadings.connection ? "wifi" :"wifi-off"} size={16} color="blue" />
+                    <Text style={styles.offlineText}>{sensorReadings.connection ? 'Online': 'Offline'}</Text>
                   </View>
                 )}
-              </Card.Content>
+                
+             
+
+              </Card.Content> 
+              
+              
             </Card>
+            : null
           ))}
         </View>
       </ScrollView>
